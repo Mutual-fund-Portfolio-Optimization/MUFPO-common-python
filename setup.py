@@ -1,9 +1,9 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='MUFPO common python library',
+    name='MUFPO',
     version='1.0',
-    packages=find_packages(),
+    py_modules=['mufpo.lib'],
     author='Vitvara Varavithya',
-    author_email='grid.vitvara@gmail.com'
+    author_email='grid.vitvara@gmail.com',
 )
