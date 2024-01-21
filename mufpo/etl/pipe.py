@@ -12,7 +12,7 @@ class Pipe:
     def __str__(self):
         return ' '.join([str(self.value), str(self.failed)])
     
-    def bind(self, f, message, arg=False, kwarg=False):
+    def bind(self, f, arg=False, kwarg=False):
         if self.failed:
             return self
         try:
