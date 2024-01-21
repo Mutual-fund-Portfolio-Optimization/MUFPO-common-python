@@ -12,7 +12,7 @@ class Pipe:
     def __str__(self):
         return ' '.join([str(self.value), str(self.failed)])
     
-    def bind(self, f, arg=False, kwarg=False):
+    def bind(self, f, message, arg=False, kwarg=False):
         if self.failed:
             return self
         try:
@@ -24,11 +24,11 @@ class Pipe:
                 x = f(self.get())
             return Pipe(x)
         except Exception as err:
-            print(err, f.__name__)
+            print(err, message)
             return Pipe(None, True)
     
     def __rshift__(self, f):
-        return self.bind(f, arg=True)
+        return  self.bind(f, arg=True)
     
     def __gt__(self, f):
         return self.bind(f, kwarg=True)
