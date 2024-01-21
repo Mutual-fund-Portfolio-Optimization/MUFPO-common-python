@@ -24,7 +24,7 @@ class Pipe:
                 x = f(self.get())
             return Pipe(x)
         except Exception as err:
-            print(err, message)
+            print(err, f.__name__)
             return Pipe(None, True)
     
     def __rshift__(self, f):
