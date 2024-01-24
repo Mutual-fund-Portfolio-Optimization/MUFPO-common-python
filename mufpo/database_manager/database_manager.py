@@ -57,6 +57,18 @@ class MariaDBManager:
         except SQLAlchemyError as e:
             print(f"Error: {e}")
 
+    
+    def execute_insert(self, db_name, query, **kwargs):
+        """Execute a SQL query."""
+        try:
+            with self.engine.connect() as conn:
+                conn.execute(text(f"USE {db_name}"))
+                conn.execute(text(query), **kwargs)
+                conn.commit()
+                print(f"{query} \n successful.")
+        except SQLAlchemyError as e:
+            print(f"Error: {e}")
+
 
     def list_databases(self):
         """List all databases."""
