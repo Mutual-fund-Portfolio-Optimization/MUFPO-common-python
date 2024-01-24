@@ -50,9 +50,10 @@ class MariaDBManager:
         try:
             with self.engine.connect() as conn:
                 conn.execute(text(f"USE {db_name}"))
-                conn.execute(text(query), **kwargs)
+                result = conn.execute(text(query), **kwargs)
                 conn.commit()
                 print(f"{query} \n successful.")
+                return result.fetchall()
         except SQLAlchemyError as e:
             print(f"Error: {e}")
 
