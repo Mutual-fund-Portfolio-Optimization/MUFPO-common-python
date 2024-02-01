@@ -7,7 +7,8 @@ DB_NAME = "funds_db"
 class WatchTrain(Watcher):
     @staticmethod
     def log(
-            model_name: str, 
+            model_name: str,
+            fund_name: str,
             version: str, date: datetime.datetime,
             status: str, update=False
     ):  
@@ -18,6 +19,7 @@ class WatchTrain(Watcher):
         create_table_query = f"""
         CREATE TABLE IF NOT EXISTS {table_name} (
             model_name VARCHAR(100),
+            fund_name VARCHAR(100),
             version VARCHAR(100),
             date DATETIME,
             status VARCHAR(100),
@@ -28,8 +30,8 @@ class WatchTrain(Watcher):
         
         # Insert or update data in the table
         query = f"""
-        INSERT INTO {table_name} (model_name, version, date, status) 
-        VALUES ('{model_name}', '{version}', '{date}', '{status}')
+        INSERT INTO {table_name} (model_name, fund_name, version, date, status) 
+        VALUES ('{model_name}', '{fund_name}', '{version}', '{date}', '{status}')
         ON DUPLICATE KEY UPDATE status = '{status}';
         """
             
@@ -44,6 +46,7 @@ class WatchEval(Watcher):
     @staticmethod
     def log(
             model_name:str, 
+            fund_name: str,
             version: str, date: datetime.datetime,
             metric: str, accuracy: float
     ):
@@ -55,6 +58,7 @@ class WatchEval(Watcher):
             -- If the table does not exist, create it
             CREATE TABLE {table_name} (
                 model_name VARCHAR(100),
+                fund_name VARCHAR(100),
                 version VARCHAR(100),
                 date DATETIME,
                 metric VARCHAR(100),
@@ -63,8 +67,8 @@ class WatchEval(Watcher):
             );
 
         -- Insert data into the table
-        INSERT INTO {table_name} (model_name, version, date, metric, accuracy, ) 
-        VALUES ({model_name}, {version}, {date}, {metric}, {accuracy});
+        INSERT INTO {table_name} (model_name, fund_name, version, date, metric, accuracy, ) 
+        VALUES ({model_name}, {fund_name}, {version}, {date}, {metric}, {accuracy});
         END IF;"""
         response = db_manager.execute_query(DB_NAME, query=query)
         db_manager.close_connection()
@@ -81,6 +85,7 @@ class WatchPredict(Watcher):
         create_table_query = f"""
         CREATE TABLE IF NOT EXISTS {table_name} (
             model_name VARCHAR(100),
+            fund_name VARCHAR(100),
             version VARCHAR(100),
             date DATETIME,
             predict FLOAT,
@@ -98,13 +103,14 @@ class WatchPredict(Watcher):
             version = row['version']
             date = row['date']
             predict = row['predict']
+            fund_name = row['fund_name']
             target_name = row['target_name']
             flag = row['flag']
             description = row['description']
             
             insert_query = f"""
-            INSERT INTO {table_name} (model_name, version, date, predict, target_name, flag, description) 
-            VALUES ('{model_name}', '{version}', '{date}', {predict}, '{target_name}', '{flag}', '{description}');
+            INSERT INTO {table_name} (model_name, fund_name, version, date, predict, target_name, flag, description) 
+            VALUES ('{model_name}', {fund_name}, '{version}', '{date}', {predict}, '{target_name}', '{flag}', '{description}');
             """
             db_manager.execute_query(DB_NAME, query=insert_query)
 
@@ -116,6 +122,7 @@ class WatchModel(Watcher):
     @staticmethod
     def log(
             model_name: str,
+            fund_name: str,
             version: str, date: datetime.datetime,
             parameters: str, description: str = ""
     ):
@@ -127,6 +134,7 @@ class WatchModel(Watcher):
             -- If the table does not exist, create it
             CREATE TABLE {table_name} (
                 model_name VARCHAR(100),
+                fund_name VARCHAR(100),
                 version VARCHAR(100),
                 date DATETIME,
                 parameters VARCHAR(255),
@@ -135,8 +143,8 @@ class WatchModel(Watcher):
             );
 
         -- Insert data into the table
-        INSERT INTO {table_name} (model_name, version, date, predict, target_name, flag, description) 
-        VALUES ({model_name}, {version}, {date}, {parameters}, {description});
+        INSERT INTO {table_name} (model_name, fund_name, version, date, predict, target_name, flag, description) 
+        VALUES ({model_name}, {fund_name}, {version}, {date}, {parameters}, {description});
         END IF;"""
         response = db_manager.execute_query(DB_NAME, query=query)
         db_manager.close_connection()
