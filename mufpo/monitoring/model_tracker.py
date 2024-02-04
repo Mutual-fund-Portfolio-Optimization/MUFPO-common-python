@@ -110,7 +110,7 @@ class WatchPredict(Watcher):
             
             insert_query = f"""
             INSERT INTO {table_name} (model_name, fund_name, version, date, predict, target_name, flag, description) 
-            VALUES ('{model_name}', {fund_name}, '{version}', '{date}', {predict}, '{target_name}', '{flag}', '{description}');
+            VALUES ('{model_name}', '{fund_name}', '{version}', '{date}', {predict}, '{target_name}', '{flag}', '{description}');
             """
             db_manager.execute_query(DB_NAME, query=insert_query)
 
