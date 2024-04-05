@@ -3,6 +3,8 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import sessionmaker
 import os
 from dotenv import load_dotenv
+import pandas as pd
+
 
 class MariaDBManager:
     _instance = None
@@ -38,6 +40,13 @@ class MariaDBManager:
         db_url = f"mysql+pymysql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT', '3306')}/{db_name}"
         engine = create_engine(db_url)
         df.to_sql(table_name, engine, if_exists='replace', index=False)  # 'if_exists='replace'' is crucial
+
+    def get_table(self, table_name, db_name):
+        db_url = f"mysql+pymysql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT', '3306')}/{db_name}"
+        engine = create_engine(db_url)
+        query = f"SELECT * FROM {table_name}"
+        df = pd.read_sql(query, con=engine) 
+        return df
 
     def delete_database(self, db_name):
         """Delete a database."""

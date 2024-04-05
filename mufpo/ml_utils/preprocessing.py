@@ -3,7 +3,7 @@ import pandas as pd
 from typing import Tuple
 from statsmodels.tsa.seasonal import seasonal_decompose
 from datetime import datetime
-
+from ..database_manager import MariaDBManager
 
 def fill_dataframe(df: pd.DataFrame, target_col: str, scale: bool=True) -> Tuple[pd.DataFrame, MinMaxScaler]:
     scaler = MinMaxScaler()
@@ -20,7 +20,10 @@ class ExperimentData():
     def __init__(self, data_path: str, target: str, scale='minmax'):
         self.container: list
         self.scaler_container: dict
-        self.df = pd.read_csv(data_path, index_col=0, parse_dates=True)
+        if data_path is None:
+            self.df = pd.read_csv(data_path, index_col=0, parse_dates=True)
+        db_connector = MariaDBManager()
+        self.df = db_connector.get_table('nav_daily', 'funds_db')
         self.target = target
         self.scale = scale
         self.df = self.preprocess()
