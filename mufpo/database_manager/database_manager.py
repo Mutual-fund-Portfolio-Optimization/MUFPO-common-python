@@ -34,6 +34,8 @@ class MariaDBManager:
         except SQLAlchemyError as e:
             print(f"Error: {e}")
 
+    def replace_dataframe_2_db(self, df, table_name):
+        df.to_sql(table_name, self.engine, if_exists='replace', index=False)  # 'if_exists='replace'' is crucial
 
     def delete_database(self, db_name):
         """Delete a database."""
