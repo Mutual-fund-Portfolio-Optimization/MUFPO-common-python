@@ -20,7 +20,7 @@ class ExperimentData():
     def __init__(self, data_path: str, target: str, scale='minmax'):
         self.container: list
         self.scaler_container: dict
-        if data_path is None:
+        if not data_path is None:
             self.df = pd.read_csv(data_path, index_col=0, parse_dates=True)
         db_connector = MariaDBManager()
         self.df = db_connector.get_table('nav_daily', 'funds_db')
