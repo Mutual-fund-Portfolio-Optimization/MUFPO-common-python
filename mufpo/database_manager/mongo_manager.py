@@ -49,6 +49,18 @@ class MongoDBManager:
         except Exception as e:
             print(f"Error: {e}")
 
+    def insert_data(self, db_name, collection_name, data):
+        """Insert data directly into a MongoDB collection."""
+        try:
+            collection = self.client[db_name][collection_name]
+            if isinstance(data, list):
+                collection.insert_many(data)
+            else:
+                collection.insert_one(data)
+            print(f"Data insertion into {collection_name} successful.")
+        except Exception as e:
+            print(f"Error: {e}")
+
     def bulk_insert_from_csv(self, db_name, collection_name, csv_file):
         """Bulk insert data from a CSV file to a specified collection."""
         try:
