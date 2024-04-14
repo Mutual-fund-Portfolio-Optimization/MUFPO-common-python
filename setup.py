@@ -9,7 +9,7 @@ if os.path.isfile(requirement_path):
         install_requires = list(f.read().splitlines())
 setup(
     name='MUFPO',
-    version='1.6',
+    version='1.6.1',
     packages=find_packages(),
     install_requires=install_requires,
     author='Vitvara Varavithya',
